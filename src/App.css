@@ -1,0 +1,22 @@
+.App {
+  margin: 20px 1%;
+}
+
+input {
+  background-color: #191916 !important;
+  color: #ffffff !important;
+  border-radius: 0px;
+}
+
+.todoContainer {
+  margin: 20px 4px;
+  padding: 2px;
+}
+
+.todoList > .row:nth-of-type(odd) {
+  background-color: #24242c;
+}
+
+.todoList > .row:nth-of-type(even) {
+  background-color: #1b1922;
+}
