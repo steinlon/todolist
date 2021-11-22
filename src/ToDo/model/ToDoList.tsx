@@ -44,7 +44,10 @@ export default class ToDoList {
 
     @action.bound
     toggleTodoStatus(todoId:number) {
-        this.toDos[todoId - 1].isCompleted = !this.toDos[todoId - 1].isCompleted;
+        const toggleToDo = this.toDos.find(it => it.id === todoId);
+        if (toggleToDo) {
+            toggleToDo.isCompleted = !toggleToDo.isCompleted;
+        }
     }
 
     @action.bound
