@@ -1,6 +1,6 @@
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import ToDoModel from './ToDoModel';
+import ToDoModel from './model/ToDoModel';
 import FinishStatusIcon from "./icons/FinishStatusIcon";
 import UnFinishStatusIcon from "./icons/UnFinishStatusIcon";
 import {MOVED_TODO_ITEM_KEY} from "../index";

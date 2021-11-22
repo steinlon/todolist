@@ -1,7 +1,7 @@
 import * as React from "react";
 import FinishStatusIcon from "./icons/FinishStatusIcon";
 import UnFinishStatusIcon from "./icons/UnFinishStatusIcon";
-import ToDoList from "./ToDoList";
+import ToDoList from "./model/ToDoList";
 import {MOVED_TODO_ITEM_KEY} from "../index";
 import ToDoStore from "./ToDoStore";
 

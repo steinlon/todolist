@@ -1,5 +1,5 @@
 import {action, computed, configure, observable} from 'mobx';
-import ToDoList from "./ToDoList";
+import ToDoList from "./model/ToDoList";
 import {TODO_LIST_KEY} from "../index";
 
 configure({enforceActions: 'always'});

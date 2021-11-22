@@ -2,7 +2,7 @@ import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 import ToDoTableView from './ToDoTableView';
 import ToDoStore from './ToDoStore';
-import ToDoList from "./ToDoList";
+import ToDoList from "./model/ToDoList";
 
 @inject('toDoStore')
 @observer
