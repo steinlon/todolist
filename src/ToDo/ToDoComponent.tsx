@@ -1,43 +1,45 @@
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import {Row} from 'reactstrap';
-import ToDoList from './ToDoList';
+import ToDoTableView from './ToDoTableView';
 import ToDoStore from './ToDoStore';
+import ToDoList from "./ToDoList";
 
-@inject('ToDoStore')
+@inject('toDoStore')
 @observer
-export default class ToDoComponent extends React.Component<{ ToDoStore?:ToDoStore }, { Title:string; IsCompleted:boolean; todoError:Error | null }> {
+export default class ToDoComponent extends React.Component<{ toDoStore?:ToDoStore, selectedToDoList:ToDoList },
+    { title:string; isCompleted:boolean; todoError:Error | null }> {
+
     constructor(props) {
         super(props);
-        this.state = {Title: '', IsCompleted: false, todoError: null};
+        this.state = {title: '', isCompleted: false, todoError: null};
 
         this.addToDo = this.addToDo.bind(this);
         this.onTitleChange = this.onTitleChange.bind(this);
-        this.onIsCompleteChange = this.onIsCompleteChange.bind(this);
+        this.onCompleteChange = this.onCompleteChange.bind(this);
     }
 
-    async addToDo(event:React.FormEvent<HTMLFormElement>) {
+    addToDo(event:React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        await this.props.ToDoStore?.addToDo(
-            this.state.Title,
-            this.state.IsCompleted
+        this.props.toDoStore?.addNewToDo(
+            this.state.title,
+            this.state.isCompleted,
+            this.props.selectedToDoList?.id || 1
         );
 
-        this.setState({Title: '', IsCompleted: false});
+        this.setState({title: '', isCompleted: false});
     }
 
     onTitleChange(event:React.ChangeEvent<HTMLInputElement>) {
-        this.setState({Title: event.target.value});
+        this.setState({title: event.target.value});
     }
 
-    onIsCompleteChange(event:React.ChangeEvent<HTMLInputElement>) {
-        this.setState({IsCompleted: event.target.checked});
+    onCompleteChange(event:React.ChangeEvent<HTMLInputElement>) {
+        this.setState({isCompleted: event.target.checked});
     }
 
     render() {
-        let todos = this.props.ToDoStore?.getToDos() || [];
-        // console.log(toJS(todos));
+        const todos = this.props.selectedToDoList.getToDos() || [];
 
         return (
             <div className="todoContainer">
@@ -49,68 +51,45 @@ export default class ToDoComponent extends React.Component<{ ToDoStore?:ToDoStor
                     </div>
                 ) : null}
 
-                <h4 style={{marginBottom: '30px'}}>Create New Wishlist</h4>
+                <h4>Add New Todo for {this.props.selectedToDoList?.name}</h4>
 
                 <form onSubmit={this.addToDo}>
-                    <div>
-                        <Row>
-                            <div className="form-group col-md-8">
-                                <label className="form-label" htmlFor="Title">
-                                    Wish
-                                </label>
-                                <input
-                                    placeholder="Enter your Wish"
-                                    className="form-control"
-                                    onChange={this.onTitleChange}
-                                    name="Title"
-                                    id="Title"
-                                    style={{minWidth: '150px'}}
-                                    value={this.state.Title}
-                                    required
-                                />
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <input placeholder="Enter your title"
+                                           className="form-control"
+                                           onChange={this.onTitleChange}
+                                           name="Title"
+                                           id="Title"
+                                           style={{minWidth: '150px'}}
+                                           value={this.state.title}
+                                           required/>
+                                </div>
                             </div>
-
-                            <div
-                                className="col-md-2 form-check"
-                                style={{
-                                    marginTop: '40px',
-                                    marginLeft: '20px',
-                                    verticalAlign: 'center',
-                                }}
-                            >
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    id="IsCompleted"
-                                    name="IsCompleted"
-                                    onChange={this.onIsCompleteChange}
-                                    checked={this.state.IsCompleted}
-                                />
-
-                                <label htmlFor="IsCompleted" className="form-check-label">
-                                    Completed?
-                                </label>
+                            <div className="col-md-2 ">
+                                <div className="form-check">
+                                    <input type="checkbox"
+                                           className="form-check-input"
+                                           id="IsCompleted"
+                                           name="IsCompleted"
+                                           onChange={this.onCompleteChange}
+                                           checked={this.state.isCompleted}/>
+                                    <label htmlFor="IsCompleted" className="form-check-label">Completed?</label>
+                                </div>
                             </div>
-
-                            <div
-                                className="col-md-2 mt-30 ml-20"
-                                style={{
-                                    marginTop: '30px',
-                                    verticalAlign: 'center',
-                                }}
-                            >
-                                <button type="submit" className="btn btn-primary">
-                                    Add
-                                </button>
+                            <div className="col-md-2 mt-30 ml-20">
+                                <button type="submit" className="btn btn-primary">+</button>
                             </div>
-                        </Row>
+                        </div>
                     </div>
                 </form>
 
                 <hr/>
 
                 <div className="mt-20">
-                    <ToDoList ToDos={todos}/>
+                    <ToDoTableView ToDos={todos}/>
                 </div>
             </div>
         );

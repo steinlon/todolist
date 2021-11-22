@@ -1,45 +1,52 @@
-import { action, configure, observable } from 'mobx';
-import ToDoModel from './ToDoModel';
+import {action, computed, configure, observable} from 'mobx';
+import ToDoList from "./ToDoList";
 
-configure({ enforceActions: 'always' });
+configure({enforceActions: 'always'});
 
 export default class ToDoStore {
-  @observable
-  toDos: ToDoModel[] = [];
 
-  private todoAPI = 'https://localhost:44308/api/ToDo';
+    @observable
+    toDosLists:ToDoList[] = [];
 
-  @action.bound
-  async init() {
-    let newToDos: ToDoModel[] = [];
-    this.addToDoToStore(newToDos);
-  }
+    @observable
+    selectedToDoList:ToDoList | undefined;
 
-  @action.bound
-  addToDoToStore(ToDos: ToDoModel[]) {
-    this.toDos.length = 0;
-    for (let todo of ToDos) {
-      this.toDos.push(todo);
+    @action.bound
+    init() {
+        this.toDosLists = [];
+        this.addNewToDoList();
     }
-  }
 
-  @action.bound
-  getToDos() {
-    return this.toDos;
-  }
+    @action.bound
+    addNewToDoList() {
+        const createdToDoList = new ToDoList();
+        createdToDoList.init(this.toDosLists.length + 1, "listName:" + (this.toDosLists.length + 1));
+        this.toDosLists.push(createdToDoList);
+    }
 
-  @action.bound
-  async addToDo(title, isCompleted) {
-    let createdToDo:ToDoModel = {
-      id: this.toDos.length,
-      title: title,
-      isCompleted: isCompleted
-    };
-    this.addNewToDoToStore(createdToDo);
-  }
+    @action.bound
+    getToDoLists() {
+        return this.toDosLists;
+    }
 
-  @action.bound
-  async addNewToDoToStore(todo: ToDoModel) {
-    this.toDos.push(todo);
-  }
+    @action.bound
+    addNewToDo(title, isCompleted, listId) {
+        const relatedToDoList = this.toDosLists[listId - 1];
+        relatedToDoList.addToDo(title, isCompleted);
+    }
+
+    @action.bound
+    setSelectedToDoList(todoList:ToDoList) {
+        this.selectedToDoList = todoList;
+    }
+
+    @computed
+    get totalToDos() {
+        return this.toDosLists.map(it => it.total).reduce((a, b) => a + b, 0);
+    }
+
+    @computed
+    get totalCompletedToDos() {
+        return this.toDosLists.map(it => it.completedTotal).reduce((a, b) => a + b, 0);
+    }
 }

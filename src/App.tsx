@@ -1,41 +1,44 @@
-import { Provider } from 'mobx-react';
+import {observer, Provider} from 'mobx-react';
 import * as React from 'react';
-import { Col, Container, Row } from 'reactstrap';
 import './App.css';
 import ToDoComponent from './ToDo/ToDoComponent';
 import ToDoStore from './ToDo/ToDoStore';
 import ToDoSummary from './ToDo/ToDoSummary';
 
+@observer
 export default class App extends React.Component<{}, {}> {
-  private todoStore: ToDoStore;
 
-  constructor(props) {
-    super(props);
-    this.todoStore = new ToDoStore();
-  }
+    private todoStore:ToDoStore;
 
-  componentDidMount() {
-    this.todoStore.init();
-  }
+    constructor(props) {
+        super(props);
+        this.todoStore = new ToDoStore();
+    }
 
-  render() {
-    return (
-      <div className="App">
-        <h3>ToDo App using React and Mobx</h3>
+    componentDidMount() {
+        this.todoStore.init();
+    }
 
-        <Provider ToDoStore={this.todoStore}>
-          <Container fluid={true}>
-            <Row>
-              <Col md={{ size: 9 }}>
-                <ToDoComponent />
-              </Col>
-              <Col md={{ size: 3 }}>
-                <ToDoSummary />
-              </Col>
-            </Row>
-          </Container>
-        </Provider>
-      </div>
-    );
-  }
+    render() {
+
+        const selectedToDoList = this.todoStore.selectedToDoList;
+
+        return (
+            <div className="App">
+                <h3>ToDo List Demo</h3>
+                <Provider toDoStore={this.todoStore}>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-md-3">
+                                <ToDoSummary/>
+                            </div>
+                            <div className="col-md-9">
+                                {selectedToDoList && <ToDoComponent selectedToDoList={selectedToDoList}/>}
+                            </div>
+                        </div>
+                    </div>
+                </Provider>
+            </div>
+        );
+    }
 }
