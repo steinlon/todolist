@@ -4,14 +4,9 @@ import './App.css';
 import ToDoComponent from './ToDo/ToDoComponent';
 import ToDoStore from './ToDo/ToDoStore';
 import ToDoSummary from './ToDo/ToDoSummary';
-import {autorun} from "mobx";
 
 @observer
 export default class App extends React.Component<{todoStore:ToDoStore}, {}> {
-
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount() {
         this.props.todoStore.init();

@@ -7,13 +7,12 @@ import ToDoStore from "./ToDo/ToDoStore";
 import {autorun} from "mobx";
 
 export const TODO_LIST_KEY = "todoListKey";
+export const MOVED_TODO_ITEM_KEY = "movedTodo";
 const todoStore = new ToDoStore();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App todoStore={todoStore}/>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <App todoStore={todoStore}/>,
+    document.getElementById('root')
 );
 
 autorun(() => {

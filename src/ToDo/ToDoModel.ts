@@ -1,5 +1,5 @@
 export default class ToDoModel {
-    id?:number;
+    id!:number;
     listId!:number;
     title!:string;
     isCompleted!:boolean;

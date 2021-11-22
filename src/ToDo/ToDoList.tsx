@@ -7,9 +7,10 @@ export default class ToDoList {
     name!:string;
     @observable
     toDos:ToDoModel[] = [];
+    position?:DOMRect;
 
     @action.bound
-    init(listId:number, name:string, todos: ToDoModel[]) {
+    init(listId:number, name:string, todos:ToDoModel[]) {
         this.id = listId;
         this.name = name;
         this.toDos = todos;
@@ -29,6 +30,11 @@ export default class ToDoList {
             isCompleted: isCompleted
         };
         this.addNewToDoToList(createdToDo);
+    }
+
+    @action.bound
+    removeToDo(todoId:number) {
+        this.toDos = this.toDos.filter(it => it.id != todoId);
     }
 
     @action.bound

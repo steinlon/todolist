@@ -3,9 +3,16 @@ import * as React from 'react';
 import ToDoModel from './ToDoModel';
 import FinishStatusIcon from "./icons/FinishStatusIcon";
 import UnFinishStatusIcon from "./icons/UnFinishStatusIcon";
+import {MOVED_TODO_ITEM_KEY} from "../index";
 
 @observer
 export default class ToDoTableView extends React.Component<{ toDos:ToDoModel[], toggleTodoStatus:Function }, {}> {
+
+    handleItemDragStart = (e) => {
+        const id = Number.parseInt(e.target.id);
+        const movedTodo = this.props.toDos.find(it => it.id === id);
+        e.dataTransfer.setData(MOVED_TODO_ITEM_KEY, JSON.stringify(movedTodo));
+    }
 
     render() {
         return (
@@ -21,8 +28,11 @@ export default class ToDoTableView extends React.Component<{ toDos:ToDoModel[], 
                 <tbody>
                 {this.props.toDos.map((todo, index) => {
                     return (
-                        <tr key={index}>
-                            <th scope="row">{todo.id}</th>
+                        <tr key={index}
+                            id={todo.id.toFixed(0)}
+                            draggable={true}
+                            onDragStart={this.handleItemDragStart}>
+                            <td scope="row">{todo.id}</td>
                             <td>{todo.title}</td>
                             <td>{todo.listId}</td>
                             <td>

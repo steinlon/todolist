@@ -15,7 +15,7 @@ export default class ToDoStore {
     @action.bound
     init() {
         this.toDosLists = [];
-        const tempTodoLists = JSON.parse(<string>localStorage.getItem(TODO_LIST_KEY)) || [];
+        const tempTodoLists = JSON.parse(localStorage.getItem(TODO_LIST_KEY) as string) || [];
         if (!tempTodoLists.length) {
             this.addNewToDoList();
         } else {
@@ -48,6 +48,12 @@ export default class ToDoStore {
     addNewToDo(title, isCompleted, listId) {
         const relatedToDoList = this.toDosLists[listId - 1];
         relatedToDoList.addToDo(relatedToDoList.toDos.length + 1, title, isCompleted);
+    }
+
+    @action.bound
+    removeToDoFromList(todoId:number, listId:number) {
+        const relatedToDoList = this.toDosLists[listId - 1];
+        relatedToDoList.removeToDo(todoId);
     }
 
     @action.bound
