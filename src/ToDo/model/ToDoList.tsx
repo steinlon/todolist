@@ -34,7 +34,7 @@ export default class ToDoList {
 
     @action.bound
     removeToDo(todoId:number) {
-        this.toDos = this.toDos.filter(it => it.id != todoId);
+        this.toDos = this.toDos.filter(it => it.id !== todoId);
     }
 
     @action.bound

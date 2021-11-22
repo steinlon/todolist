@@ -32,7 +32,7 @@ export default class ToDoTableView extends React.Component<{ toDos:ToDoModel[], 
                             id={todo.id.toFixed(0)}
                             draggable={true}
                             onDragStart={this.handleItemDragStart}>
-                            <td scope="row">{todo.id}</td>
+                            <th scope="row">{todo.id}</th>
                             <td>{todo.title}</td>
                             <td>{todo.listId}</td>
                             <td>
