@@ -7,15 +7,16 @@ import ToDoList from "./ToDoList";
 @inject('toDoStore')
 @observer
 export default class ToDoComponent extends React.Component<{ toDoStore?:ToDoStore, selectedToDoList:ToDoList },
-    { title:string; isCompleted:boolean; todoError:Error | null }> {
+    { title:string; isCompleted:boolean; }> {
 
     constructor(props) {
         super(props);
-        this.state = {title: '', isCompleted: false, todoError: null};
+        this.state = {title: '', isCompleted: false};
 
         this.addToDo = this.addToDo.bind(this);
         this.onTitleChange = this.onTitleChange.bind(this);
         this.onCompleteChange = this.onCompleteChange.bind(this);
+        this.toggleTodoStatus = this.toggleTodoStatus.bind(this);
     }
 
     addToDo(event:React.FormEvent<HTMLFormElement>) {
@@ -38,21 +39,16 @@ export default class ToDoComponent extends React.Component<{ toDoStore?:ToDoStor
         this.setState({isCompleted: event.target.checked});
     }
 
+    toggleTodoStatus(todoId:number) {
+        this.props.toDoStore?.toggleTodoStatus(this.props.selectedToDoList.id, todoId);
+    }
+
     render() {
         const todos = this.props.selectedToDoList.getToDos() || [];
 
         return (
             <div className="todoContainer">
-                {this.state.todoError?.message ? (
-                    <div>
-                        <div className="alert alert-danger" role="alert">
-                            Some error occurred. Please try again
-                        </div>
-                    </div>
-                ) : null}
-
                 <h4>Add New Todo for {this.props.selectedToDoList?.name}</h4>
-
                 <form onSubmit={this.addToDo}>
                     <div className="container-fluid">
                         <div className="row">
@@ -86,10 +82,8 @@ export default class ToDoComponent extends React.Component<{ toDoStore?:ToDoStor
                     </div>
                 </form>
 
-                <hr/>
-
                 <div className="mt-20">
-                    <ToDoTableView ToDos={todos}/>
+                    <ToDoTableView toDos={todos} toggleTodoStatus={this.toggleTodoStatus}/>
                 </div>
             </div>
         );

@@ -4,29 +4,27 @@ import './App.css';
 import ToDoComponent from './ToDo/ToDoComponent';
 import ToDoStore from './ToDo/ToDoStore';
 import ToDoSummary from './ToDo/ToDoSummary';
+import {autorun} from "mobx";
 
 @observer
-export default class App extends React.Component<{}, {}> {
-
-    private todoStore:ToDoStore;
+export default class App extends React.Component<{todoStore:ToDoStore}, {}> {
 
     constructor(props) {
         super(props);
-        this.todoStore = new ToDoStore();
     }
 
     componentDidMount() {
-        this.todoStore.init();
+        this.props.todoStore.init();
     }
 
     render() {
 
-        const selectedToDoList = this.todoStore.selectedToDoList;
+        const selectedToDoList = this.props.todoStore.selectedToDoList;
 
         return (
             <div className="App">
                 <h3>ToDo List Demo</h3>
-                <Provider toDoStore={this.todoStore}>
+                <Provider toDoStore={this.props.todoStore}>
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-md-3">

@@ -1,5 +1,6 @@
 import {action, computed, configure, observable} from 'mobx';
 import ToDoList from "./ToDoList";
+import {TODO_LIST_KEY} from "../index";
 
 configure({enforceActions: 'always'});
 
@@ -14,14 +15,28 @@ export default class ToDoStore {
     @action.bound
     init() {
         this.toDosLists = [];
-        this.addNewToDoList();
+        const tempTodoLists = JSON.parse(<string>localStorage.getItem(TODO_LIST_KEY)) || [];
+        if (!tempTodoLists.length) {
+            this.addNewToDoList();
+        } else {
+            tempTodoLists.forEach(it => {
+                const createdToDoList = new ToDoList();
+                createdToDoList.init(it.id, it.name, it.toDos);
+                this.appendToDoList(createdToDoList);
+            });
+        }
     }
 
     @action.bound
     addNewToDoList() {
         const createdToDoList = new ToDoList();
-        createdToDoList.init(this.toDosLists.length + 1, "listName:" + (this.toDosLists.length + 1));
-        this.toDosLists.push(createdToDoList);
+        createdToDoList.init(this.toDosLists.length + 1, "listName:" + (this.toDosLists.length + 1), []);
+        this.appendToDoList(createdToDoList);
+    }
+
+    @action.bound
+    appendToDoList(toDoList:ToDoList) {
+        this.toDosLists.push(toDoList);
     }
 
     @action.bound
@@ -32,12 +47,17 @@ export default class ToDoStore {
     @action.bound
     addNewToDo(title, isCompleted, listId) {
         const relatedToDoList = this.toDosLists[listId - 1];
-        relatedToDoList.addToDo(title, isCompleted);
+        relatedToDoList.addToDo(relatedToDoList.toDos.length + 1, title, isCompleted);
     }
 
     @action.bound
     setSelectedToDoList(todoList:ToDoList) {
         this.selectedToDoList = todoList;
+    }
+
+    @action.bound
+    toggleTodoStatus(listId:number, todoId:number) {
+        this.toDosLists[listId - 1].toggleTodoStatus(todoId);
     }
 
     @computed

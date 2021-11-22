@@ -9,10 +9,10 @@ export default class ToDoList {
     toDos:ToDoModel[] = [];
 
     @action.bound
-    init(listId:number, name:string) {
+    init(listId:number, name:string, todos: ToDoModel[]) {
         this.id = listId;
         this.name = name;
-        this.toDos = [];
+        this.toDos = todos;
     }
 
     @action.bound
@@ -21,9 +21,9 @@ export default class ToDoList {
     }
 
     @action.bound
-    addToDo(title, isCompleted) {
+    addToDo(id, title, isCompleted) {
         const createdToDo:ToDoModel = {
-            id: this.toDos.length + 1,
+            id: id,
             listId: this.id,
             title: title,
             isCompleted: isCompleted
@@ -34,6 +34,16 @@ export default class ToDoList {
     @action.bound
     addNewToDoToList(todo:ToDoModel) {
         this.toDos.push(todo);
+    }
+
+    @action.bound
+    toggleTodoStatus(todoId:number) {
+        this.toDos[todoId - 1].isCompleted = !this.toDos[todoId - 1].isCompleted;
+    }
+
+    @action.bound
+    toggleAllTodoStatus(status:boolean) {
+        this.toDos.forEach(it => it.isCompleted = status);
     }
 
     @computed get total() {

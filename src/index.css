@@ -3,10 +3,10 @@ body {
   font-size: 14px;
   color: #000000;
   box-sizing: border-box;
-  margin: 0px;
+  margin: 0;
 }
 
 * {
-  border-radius: 0px;
+  border-radius: 0;
   box-sizing: border-box;
 }
